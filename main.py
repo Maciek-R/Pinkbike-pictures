@@ -1,6 +1,8 @@
 from urllib import request
+import os
 
 fileWithUrls = "urls.txt"
+picturesFolder = "pictures/"
 
 def changeStringCharAt(text, pos, char):
 	l = list(text)
@@ -8,6 +10,10 @@ def changeStringCharAt(text, pos, char):
 	return "".join(l)
 
 def loadLinksFromFile():
+	if not os.path.exists(picturesFolder):
+		os.makedirs(picturesFolder)
+	if not os.path.exists(fileWithUrls):
+		open(fileWithUrls, 'a').close()
 	return open(fileWithUrls, "r").read().split('\n')
 	
 def modifyUrl(requestUrl):
@@ -18,7 +24,7 @@ def modifyUrl(requestUrl):
 	
 def downloadFile(requestUrl):
 	urlSplits = requestUrl.split("/")
-	fileName = urlSplits[-1]
+	fileName = picturesFolder + urlSplits[-1]
 	print("Downloading file: " + requestUrl)
 	f = open(fileName, 'wb')
 	f.write(request.urlopen(requestUrl).read())
