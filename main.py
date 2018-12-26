@@ -1,26 +1,27 @@
 from urllib import request
 import os
 
-fileWithUrls = "urls.txt"
+fileWithIds = "urls.txt"
 picturesFolder = "pictures/"
+
+prefixLink = "https://ep1.pinkbike.org/"
+uniquePrefix = "p0pb"
+extensionFile = ".png"
 
 def changeStringCharAt(text, pos, char):
 	l = list(text)
 	l[pos] = char
 	return "".join(l)
 
-def loadLinksFromFile():
+def loadIdsFromFile():
 	if not os.path.exists(picturesFolder):
 		os.makedirs(picturesFolder)
-	if not os.path.exists(fileWithUrls):
-		open(fileWithUrls, 'a').close()
-	return open(fileWithUrls, "r").read().split('\n')
+	if not os.path.exists(fileWithIds):
+		open(fileWithIds, 'a').close()
+	return open(fileWithIds, "r").read().split('\n')
 	
-def modifyUrl(requestUrl):
-	urlSplits = requestUrl.split("/")
-	urlSplits[-1] = changeStringCharAt(urlSplits[-1], 1, '0')
-	urlSplits[-2] = changeStringCharAt(urlSplits[-2], 1, '0')
-	return "/".join(urlSplits)
+def createUrl(iD):
+	return prefixLink+uniquePrefix+iD+'/'+uniquePrefix+iD+extensionFile
 	
 def downloadFile(requestUrl):
 	urlSplits = requestUrl.split("/")
@@ -32,9 +33,9 @@ def downloadFile(requestUrl):
 	print("Successfully downloaded file: " + requestUrl)
 
 if __name__ == "__main__":
-	links = loadLinksFromFile()
-	for link in links:
-		modifiedLink = modifyUrl(link)
-		downloadFile(modifiedLink)
+	iDS = loadIdsFromFile()
+	for iD in iDS:
+		createdLink = createUrl(iD)
+		downloadFile(createdLink)
 		
-	print("Finished downloading " + str(len(links)) + " files.")
+	print("Finished downloading " + str(len(iDS)) + " files.")
